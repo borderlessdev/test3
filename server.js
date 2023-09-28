@@ -7,14 +7,14 @@ const app = express();
 const port = process.env.PORT || 3000; // Use a porta definida no ambiente ou 3000
 
 const private_key = "edskS55SstJHyYXDJY2qZ8TT1s35ZqGtYqVPPyKiu5rkUhP6nfkWfWiFNhaDjcnY1uwYzho4yZAMAygPwQuawutZDtRrrcgWUZ"
+const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
 const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
 Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(private_key) });
-const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
 
 app.get('/auction', async (req, res) => {
   try {
-    const contract = Tezos.wallet.at(contrato)
-    const op = await contract.methods.finalize_auction(1, 5, 1);
+    const contract = await Tezos.wallet.at(contrato)
+    const op = contract.methods.finalize_auction(1, 5, 1);
     
     res.status(200).json({ message: 'Transação aceita' });
       } catch (error) {
