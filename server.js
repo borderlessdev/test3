@@ -14,7 +14,7 @@ Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(private_key) });
 app.get('/auction', async (req, res) => {
   try {
     const contract = await Tezos.wallet.at(contrato)
-    const op = contract.methods.finalize_auction(1, 5, 1);
+    const op = contract.methods.finalize_auction(1, 5, 1).send();
     res.status(200).json({ message: `Transação aceita ${op}` });
       } catch (error) {
         console.error('Error', error)
@@ -25,7 +25,7 @@ app.get('/auction', async (req, res) => {
     app.post('/auction', async (req, res) => {
       try {
         const contract = await Tezos.wallet.at(contrato)
-        const op = contract.methods.finalize_auction(1, 5, 1);
+        const op = contract.methods.finalize_auction(1, 5, 1).send();
         res.status(200).json({ message: `Transação aceita ${op}` });
           } catch (error) {
             console.error('Error', error)
