@@ -19,7 +19,7 @@ const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
 app.post('/auction', async (req, res) => {
   try {
         const { auction_id, edition, token_id } = req.body
-        console.log(privateKey[Service])
+        console.log(privateKey)
         console.log(privateKey)
         const contract = await Tezos.wallet.at(contrato)
         //const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
