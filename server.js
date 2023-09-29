@@ -18,8 +18,7 @@ const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
 app.post('/auction', async (req, res) => {
   try {
     console.log(JSON.stringify(privateKey.config.privateKey))
-    const a = JSON.stringify(privateKey.config.privateKey)
-    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(a) });
+    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
     const contract = await Tezos.wallet.at(contrato)
     const { auction_id, edition, token_id } = req.body
     const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
