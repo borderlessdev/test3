@@ -1,7 +1,7 @@
 import express from 'express';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import { aws } from 'aws-sdk'
+import aws from 'aws-sdk'
 
 // Configurações
 const app = express();
