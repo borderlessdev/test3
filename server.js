@@ -17,9 +17,9 @@ Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(private_key) });
       try {
         const { auction_id, edition, token_id } = req.body;
         console.log(auction_id, edition, token_id)
-        const contract = await Tezos.wallet.at(contrato)
-        const op = contract.methods.finalize_auction(auction_id, edition, token_id).send();
-        res.status(200).json({ message: `Transação aceita ${(await op).opHash}` });
+        // const contract = await Tezos.wallet.at(contrato)
+        // const op = contract.methods.finalize_auction(auction_id, edition, token_id).send();
+        // res.status(200).json({ message: `Transação aceita ${(await op).opHash}` });
           } catch (error) {
             console.error('Error', error)
             res.status(500).json({ error: 'An error occurred'})
