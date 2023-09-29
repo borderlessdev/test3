@@ -8,16 +8,16 @@ const app = express();
 app.use(express.json())
 const port = process.env.PORT || 3000; // Use a porta definida no ambiente ou 3000
 
-const privateKey = new aws.S3({
-  privateKey: process.env.privateKey
-})
 const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
 const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
 
-Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
 
 app.post('/auction', async (req, res) => {
   try {
+    const privateKey = new aws.S3({
+      privateKey: process.env.privateKey
+    })
+    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
     console.log(JSON.stringify(privateKey.config.privateKey))
     const contract = await Tezos.wallet.at(contrato)
 
