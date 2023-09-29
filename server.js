@@ -12,24 +12,14 @@ const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
 const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
 Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(private_key) });
 
-app.get('/auction', async (req, res) => {
-  try {
-    const { auction_id, edition, token_id } = req.body;
-    console.log(auction_id, edition, token_id)
-    const contract = await Tezos.wallet.at(contrato)
-    const op = contract.methods.finalize_auction(auction_id, edition, token_id).send();
-    res.status(200).json({ message: `Transação aceita ${(await op).opHash}` });
-      } catch (error) {
-        console.error('Error', error)
-        res.status(500).json({ error: 'An error occurred'})
-      }
-    });
 
     app.post('/auction', async (req, res) => {
       try {
+        const { auction_id, edition, token_id } = req.body;
+        console.log(auction_id, edition, token_id)
         const contract = await Tezos.wallet.at(contrato)
-        const op = contract.methods.finalize_auction(2, 5, 2).send();
-        res.status(200).json({ message: `Transação aceita ${op}` });
+        const op = contract.methods.finalize_auction(auction_id, edition, token_id).send();
+        res.status(200).json({ message: `Transação aceita ${(await op).opHash}` });
           } catch (error) {
             console.error('Error', error)
             res.status(500).json({ error: 'An error occurred'})
