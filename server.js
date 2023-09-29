@@ -18,8 +18,11 @@ const chave = "edskS55SstJHyYXDJY2qZ8TT1s35ZqGtYqVPPyKiu5rkUhP6nfkWfWiFNhaDjcnY1
 
 app.post('/auction', async (req, res) => {
   try {
-    console.log(typeof chave)
-    console.log(typeof JSON.stringify(privateKey.config.privateKey))
+    if (chave === JSON.stringify(privateKey.config.privateKey)) {
+      console.log('sim')
+    } else {
+      console.log('Nao')
+    }
     Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
     console.log(JSON.stringify(privateKey.config.privateKey))
     const contract = await Tezos.wallet.at(contrato)
