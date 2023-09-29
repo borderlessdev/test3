@@ -15,8 +15,8 @@ Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(private_key) });
 
     app.post('/auction', async (req, res) => {
       try {
-        const { auction_id, edition, token_id } = req.body;
-        console.log(auction_id, edition, token_id)
+        const { auction_id, edition, token_id } = await req.body;
+        console.log()
         // const contract = await Tezos.wallet.at(contrato)
         // const op = contract.methods.finalize_auction(auction_id, edition, token_id).send();
         // res.status(200).json({ message: `Transação aceita ${(await op).opHash}` });
