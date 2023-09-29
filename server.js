@@ -18,18 +18,16 @@ const chave = "edskS55SstJHyYXDJY2qZ8TT1s35ZqGtYqVPPyKiu5rkUhP6nfkWfWiFNhaDjcnY1
 
 app.post('/auction', async (req, res) => {
   try {
-    if (chave === JSON.stringify(privateKey.config.privateKey)) {
-      console.log('sim')
-    } else {
-      console.log('Nao')
-    }
-    console.log(chave)
-    console.log(JSON.stringify(privateKey.config.privateKey))
+    // settando quem irá aceitar as transações
     Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(privateKey.config.privateKey) });
-    console.log(JSON.stringify(privateKey.config.privateKey))
+
+    // settando o contrato
     const contract = await Tezos.wallet.at(contrato)
 
+    // requisitando os dados necessarios
     const { auction_id, edition, token_id } = req.body
+
+    // passando para a função finalize
     const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
     res.status(200).json({ message: `Transação aceita, op Hash:  ${op.opHash}` });
       } catch (error) {
@@ -37,7 +35,10 @@ app.post('/auction', async (req, res) => {
         res.status(500).json({ error: 'An error occurred'})
       }
     });
-// Iniciando o servidor
+
+
+
+// iniciando o servidor
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
