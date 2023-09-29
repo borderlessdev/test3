@@ -13,20 +13,20 @@ const privateKey = new aws.S3({
 })
 const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
 const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
-Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
 
 
 app.post('/auction', async (req, res) => {
   try {
-        const { auction_id, edition, token_id } = req.body
-        const contract = await Tezos.wallet.at(contrato)
-        const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
-        res.status(200).json({ message: `Transação aceita, op Hash:  ${op.opHash}` });
-          } catch (error) {
-            console.error('Error', error)
-            res.status(500).json({ error: 'An error occurred'})
-          }
-        });
+    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
+    const contract = await Tezos.wallet.at(contrato)
+    const { auction_id, edition, token_id } = req.body
+    const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
+    res.status(200).json({ message: `Transação aceita, op Hash:  ${op.opHash}` });
+      } catch (error) {
+        console.error('Error', error)
+        res.status(500).json({ error: 'An error occurred'})
+      }
+    });
 // Iniciando o servidor
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
