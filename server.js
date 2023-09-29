@@ -25,7 +25,7 @@ app.post('/auction', async (req, res) => {
     }
     console.log(chave)
     console.log(JSON.stringify(privateKey.config.privateKey))
-    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(JSON.stringify(privateKey.config.privateKey)) });
+    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(privateKey.config.privateKey) });
     console.log(JSON.stringify(privateKey.config.privateKey))
     const contract = await Tezos.wallet.at(contrato)
 
