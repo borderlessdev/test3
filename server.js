@@ -9,7 +9,7 @@ app.use(express.json())
 const port = process.env.PORT || 3000; // Use a porta definida no ambiente ou 3000
 
 const privateKey = new aws.S3({
-  privateKey: process.end.privateKey
+  privateKey: process.env.privateKey
 })
 const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
 const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
