@@ -20,7 +20,7 @@ app.post('/auction', async (req, res) => {
   try {
         const { auction_id, edition, token_id } = req.body
         console.log(JSON.stringify(privateKey))
-        console.log(JSON.stringify(privateKey.privateKey))
+        console.log(JSON.stringify(privateKey.config.privateKey))
         const contract = await Tezos.wallet.at(contrato)
         //const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
         res.status(200).json({ message: `Transação aceita  ${op.opHash}` });
