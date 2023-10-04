@@ -1,44 +1,65 @@
 import express from 'express';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import aws from 'aws-sdk'
+import aws from 'aws-sdk';
+import EventEmitter from 'events';
 
-// Configurações
 const app = express();
-app.use(express.json())
-const port = process.env.PORT || 3000; // Use a porta definida no ambiente ou 3000
+app.use(express.json());
+const port = process.env.PORT || 3000;
 
-const contrato = "KT1EFLadgpu6EjSh4qrQP1BsxGyjP3cHh6cu"
-const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com")
+const contrato = "KT1VVytMNaJBgyBDQqE99xwvMChd8z6Rk8Tg";
+const Tezos = new TezosToolkit("https://ghostnet.ecadinfra.com");
 
 const privateKey = new aws.S3({
   privateKey: process.env.privateKey
-})
+});
+
 const chave = "edskS55SstJHyYXDJY2qZ8TT1s35ZqGtYqVPPyKiu5rkUhP6nfkWfWiFNhaDjcnY1uwYzho4yZAMAygPwQuawutZDtRrrcgWUZ"
 
-app.post('/auction', async (req, res) => {
+const eventEmitter = new EventEmitter();
+
+// Função para fechar o leilão
+async function fecharLeilao(auction_id, edition, token_id) {
   try {
-    // settando quem irá aceitar as transações
-    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(privateKey.config.privateKey) });
+    // Settando quem irá aceitar as transações
+    Tezos.setProvider({ signer: await InMemorySigner.fromSecretKey(chave) });
 
-    // settando o contrato
-    const contract = await Tezos.wallet.at(contrato)
+    // Settando o contrato
+    const contract = await Tezos.wallet.at(contrato);
 
-    // requisitando os dados necessarios
-    const { auction_id, edition, token_id } = req.body
-
-    // passando para a função finalize
+    // Realize as operações necessárias para fechar o leilão
     const op = await contract.methods.finalize_auction(auction_id, edition, token_id).send();
-    res.status(200).json({ message: `Transação aceita, op Hash:  ${op.opHash}` });
-      } catch (error) {
-        console.error('Error', error)
-        res.status(500).json({ error: 'An error occurred'})
-      }
-    });
 
+    console.log(`Leilão fechado com sucesso - auction_id: ${auction_id}, edition: ${edition}, token_id: ${token_id}`);
+  } catch (error) {
+    console.error('Erro ao fechar o leilão', error);
+  }
+}
 
+// Rota para agendar o fechamento do leilão com base no tempo
+app.post('/fechar-leilao', (req, res) => {
+  try {
+    const { auction_id, edition, token_id, time } = req.body;
 
-// iniciando o servidor
+    // Verifique se o tempo é um número válido
+    if (!isNaN(time)) {
+      // Agende o fechamento do leilão após o tempo especificado
+      setTimeout(() => {
+        fecharLeilao(auction_id, edition, token_id);
+      }, time);
+
+      res.status(200).json({ message: 'Fechamento do leilão agendado com sucesso' });
+    } else {
+      res.status(400).json({ message: 'Tempo inválido' });
+    }
+  } catch (error) {
+    console.error('Erro ao agendar o fechamento do leilão', error);
+    res.status(500).json({ error: 'Um erro ocorreu' });
+  }
+});
+
+// Iniciando o servidor
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Servidor rodando na porta ${port}`);
 });
